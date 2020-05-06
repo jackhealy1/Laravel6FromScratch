@@ -17,11 +17,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-//new test route
-Route::get('/test', function () {
-    return view('test', ['name' => request('name')]);
+Route::get('/contact', function () {
+    return view('contact');
 });
 
+//POSTS PAGE -
 //wildcard route - {post} can be anything
 // Route::get('/posts/{post}', function ($post) {
 //     $posts = [
