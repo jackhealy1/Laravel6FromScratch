@@ -24,26 +24,15 @@ class ArticlesController extends Controller
         //shows a view to create a new resource
         return view('articles.create');
     }
+
     public function store()
     {
-        //validation
-        request()->validate([
-            'title' => 'required',
-            'excerpt' => 'required',
-            'body' => 'required'
-        ]);
-
-        //persist the new resource
-        $article = new Article();
-        //clean up
-        $article->title = request('title');
-        $article->excerpt = request('excerpt');
-        $article->body = request('body');
-
-        $article->save();
+        //validation and creation of new article
+        Article::create($this->validateArticle());
 
         return redirect('/articles');
     }
+
     public function edit(Article $article)
     {
 
@@ -51,27 +40,26 @@ class ArticlesController extends Controller
         //find the article associated with the id
         return view('articles.edit', ['article' => $article]);
     }
+
     public function update(Article $article)
     {
-        //validation
-        request()->validate([
-            'title' => 'required',
-            'excerpt' => 'required',
-            'body' => 'required'
-        ]);
+        //validate, update and persist the article
+        $article->update($this->validateArticle());
 
-        //persist the edited resource
-
-        $article->title = request('title');
-        $article->excerpt = request('excerpt');
-        $article->body = request('body');
-        $article->save();
-
-        return redirect('/articles/' . $article->id);
+        return redirect($article->path());
     }
+
     public function destroy()
     {
         //delete a resource
     }
 
+    protected function validateArticle()  
+    { 
+        return request()->validate([
+            'title' => 'required',
+            'excerpt' => 'required',
+            'body' => 'required'
+        ]);
+    }
 }
