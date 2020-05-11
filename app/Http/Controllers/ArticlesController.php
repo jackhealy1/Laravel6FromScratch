@@ -14,11 +14,8 @@ class ArticlesController extends Controller
 
         return view('articles.index', ['article' => $article]);
     }
-    public function show($id)
+    public function show(Article $article)
     {
-        //show a single resource
-        $article = Article::find($id);
-
         return view('articles.show', ['article' => $article]);
     }
 
@@ -30,6 +27,12 @@ class ArticlesController extends Controller
     public function store()
     {
         //validation
+        request()->validate([
+            'title' => 'required',
+            'excerpt' => 'required',
+            'body' => 'required'
+        ]);
+
         //persist the new resource
         $article = new Article();
         //clean up
@@ -41,17 +44,23 @@ class ArticlesController extends Controller
 
         return redirect('/articles');
     }
-    public function edit($id)
+    public function edit(Article $article)
     {
-        $article = Article::find($id);
+
         //show a view to edit an existing resource
         //find the article associated with the id
         return view('articles.edit', ['article' => $article]);
     }
-    public function update($id)
+    public function update(Article $article)
     {
+        //validation
+        request()->validate([
+            'title' => 'required',
+            'excerpt' => 'required',
+            'body' => 'required'
+        ]);
+
         //persist the edited resource
-        $article = Article::find($id);
 
         $article->title = request('title');
         $article->excerpt = request('excerpt');

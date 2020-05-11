@@ -4,6 +4,14 @@
 
 <div id="wrapper">
 	<div id="page" class="container">
+	<a href="/articles/create" accesskey="4" title="">
+	<button class="button is-link">
+	New Article
+	</button>
+	<br>
+	</a>
+
+<br>
 
 		@foreach ($article as $article)
 		<div id="content">
