@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Tag;
 use App\Article;
 use Illuminate\Http\Request;
 
@@ -9,11 +10,16 @@ class ArticlesController extends Controller
 {
     public function index()
     {
-        //render a list
-        $article = Article::latest()->get();
-
+        if (request('tag')){
+            $article = Tag::where('name', request('tag'))->firstOrFail()->articles;
+        } else {
+            $article = Article::latest()->get();
+        }
+        
         return view('articles.index', ['article' => $article]);
+
     }
+
     public function show(Article $article)
     {
         return view('articles.show', ['article' => $article]);
@@ -22,13 +28,20 @@ class ArticlesController extends Controller
     public function create()
     {
         //shows a view to create a new resource
-        return view('articles.create');
+        return view('articles.create', [
+            'tags' => Tag::all()
+        ]);
     }
 
     public function store()
     {
+        $this->validateArticle();
         //validation and creation of new article
-        Article::create($this->validateArticle());
+        $article = new Article(request(['title', 'excerpt', 'body']));
+        $article->user_id = 1; // auth()->id()
+        $article->save();
+
+        $article->tags()->attach(request('tags'));
 
         return redirect('/articles');
     }
@@ -59,7 +72,8 @@ class ArticlesController extends Controller
         return request()->validate([
             'title' => 'required',
             'excerpt' => 'required',
-            'body' => 'required'
+            'body' => 'required',
+            'tags' => 'exists:tags,id'
         ]);
     }
 }

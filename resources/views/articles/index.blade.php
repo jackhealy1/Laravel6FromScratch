@@ -13,7 +13,7 @@
 
 	<br>
 
-	@foreach ($article as $article)
+	@forelse ($article as $article)
 	<div id="content">
 		<div class="title">
 			<h2>
@@ -26,12 +26,11 @@
 	
 		<p>
 			<img src="images/banner.jpg" alt="" class="image image-full"/>
-		</p>
-
-			
-
+		</p>	
 	</div>
-	@endforeach
+	@empty
+		<p>No relevant articles yet.</p>
+	@endforelse
 	</div>
 </div>
 
